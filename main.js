@@ -18,17 +18,20 @@ var FAT = (function(){
 		 */
 
 		var predefinedbasicTests = {
+			/*
 			moduleSliderID:	{
 				testCode: "someCode",
 				message: "Any moduleSlider has an ID",
 				type: "xpath"
 			},
+			*/
 			metaSection:	{
 				testCode: "//div[@class = 'meta']",
-				message: "Any moduleSlider has an ID",
+				message: "A meta section has to be defined!",
 				func: function(data){
 					console.log(data);
 					console.log("in callback");
+					return true;
 				},
 				type: "xpath"
 			}
@@ -155,7 +158,7 @@ var FAT = (function(){
 			testsToRun = __findTestsToRun();
 
 			__callQunit(testsToRun.basicTests, basicTests);
-			__callQunit(testsToRun.userTests, userTests);
+	//		__callQunit(testsToRun.userTests, userTests);
 
 
 			console.log("tests ended");
@@ -190,8 +193,8 @@ var FAT = (function(){
 			for (i = boxes.length; i--;) {
 				if (boxes[i].type === 'checkbox') {
 					boxes[i].checked = true;
+				}
 			}
-		}
 		}
 
 		function __getIdListFromElements (arr) {
@@ -201,7 +204,7 @@ var FAT = (function(){
 			for (i = arr.length; i--;) {
 				returnArr.push(arr[i].id);
 			}
-			
+
 			return returnArr;
 		}
 
@@ -233,15 +236,7 @@ var FAT = (function(){
 		}
 
 		function __callQunit (testIds, tests) {
-			console.log(fitml);
-			/*
-			 resultTypes
-			 https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIDOMXPathResult#type_constants
-			 1 number
-			 2 string
-			 3 boolean
-			 4-9 nodeSets
-			*/
+			//		console.log(fitml);
 
 			var i = 0
 			, y = 0
@@ -252,24 +247,55 @@ var FAT = (function(){
 			, testResult = ""
 			;
 
+
 			for (y = testIds.length; y--;) {
 				testID = testIds[y];
 				test2run = tests[testID];
 				testResult = __runTest(test2run.testCode, test2run.type);
 
-	//			console.log(testResult);
-			}
+				//			console.log(testResult);
 
+				console.log(test2run);
+				userTestResult = test2run.func(testResult);
+				}
 
-			test("hallo", function() {
-					ok(1 === 1, "passed");
-				});
+			test(test2run.message, function(userTestResult) {
+					ok( userTestResult === true, test2run.message);
+				//	ok(test2run.func() === true, test2run.message);
+			});
 
 		}
 
 		//TODO this api should be expanded to cover more test-types 
 		function __runTest (testCode, type) {
-			var f = fitml.evaluate(testCode, fitml, null, XPathResult.ANY_TYPE, null);
+	//		console.log(testCode);
+			//	console.log(fitml);
+			var testResult = fitml.evaluate(testCode, fitml, null, XPathResult.ANY_YTPE, null);
+
+			/*
+			 possible resultTypes
+			 https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIDOMXPathResult#type_constants
+			 1 number
+			 2 string
+			 3 boolean
+			 4-9 nodeSets // when ANY_TYPE is expected, nodeSets are always UNORDERED_NODE_ITERATOR_TYPE
+			 */
+
+			var result = "";
+			var resultType = testResult.resultType;
+
+			if(resultType === 1) {
+				//console.log("resultType is 1 / number");
+				result = testResult.numberValue;
+			}else if(resultType === 2){
+				//console.log("resultType is 2 / string");
+				result = testResult.stringValue;
+			}else if(resultType >= 4 && resultType <= 9){
+				//console.log("resultType is 4-9 / nodeSet");
+				result = testResult;
+	//			console.log(result);
+			}
+
 			return result; 
 		}
 
@@ -301,5 +327,5 @@ FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
 
 //FAT.addTest("fooboo", "count(//img[not(@alt)])", "0","All images have an alt attribute" ,"xpath");
 //console.log(localStorage.Fat_userTests);
-		FAT.runTests();
+FAT.runTests();
 
