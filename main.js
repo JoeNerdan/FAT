@@ -19,12 +19,12 @@ var FAT = (function(){
 
 		var predefinedbasicTests = {
 			/*
-			moduleSliderID:	{
-				testCode: "someCode",
-				message: "Any moduleSlider has an ID",
-				type: "xpath"
-			},
-			*/
+			 moduleSliderID:	{
+			 testCode: "someCode",
+			 message: "Any moduleSlider has an ID",
+			 type: "xpath"
+		 },
+		 */
 			metaSection:	{
 				testCode: "//div[@class = 'meta']",
 				message: "A meta section has to be defined!",
@@ -43,6 +43,7 @@ var FAT = (function(){
 		, basicTestsCon = d.getElementById("basicTests")
 		, userTestsCon = d.getElementById("userTests")
 		, i = 0
+		//FIXME check if updated
 		, basicTests = __readFromStorage("Fat_basicTests") || __saveToStorage("Fat_basicTests", predefinedbasicTests)
 		, userTests =  __readFromStorage("Fat_userTests") || __saveToStorage("Fat_userTests", {})
 		, fitml = {}
@@ -59,6 +60,7 @@ var FAT = (function(){
 
 			localStorage.setItem(name, JSON.stringify(obj));
 			var data = __readFromStorage(name);
+			//		console.log(data);
 			return data;
 		}
 
@@ -71,15 +73,17 @@ var FAT = (function(){
 
 			if (!data) { return false; }
 
+			//make functions out of json-strings
+			//TODO dont recreate data object, just overwrite .func
 			for(test in data){
 				if (data.hasOwnProperty(test)) {
 					returnObj[test] = data[test];
 					returnObj[test].func = eval('(function(){return '+data[test].func+'})()');
+					//		console.log(returnObj);
 				}
 			}
 
-			//console.log("returnObj:");
-			//console.log(returnObj);
+
 			return returnObj;
 		}
 
@@ -91,7 +95,7 @@ var FAT = (function(){
 
 			var container = d.createDocumentFragment();
 
-			var test = {};
+			var test = null;
 			for(test in tests){
 				if (tests.hasOwnProperty(test)) {
 
@@ -143,7 +147,8 @@ var FAT = (function(){
 				'type': type
 			};
 
-			__saveToStorage("Fat_userTests", userTests);
+			var data = __saveToStorage("Fat_userTests", userTests);
+			//	console.log(data);
 
 			return this;
 		}
@@ -154,11 +159,13 @@ var FAT = (function(){
 
 		function _runTests(){
 			console.log("tests running");
+			basicTests = __readFromStorage("Fat_basicTests");
+			userTests = __readFromStorage("Fat_userTests");
 			fitml = __getFITML();
 			testsToRun = __findTestsToRun();
 
-			__callQunit(testsToRun.basicTests, basicTests);
-	//		__callQunit(testsToRun.userTests, userTests);
+			//		__callQunit(testsToRun.basicTests, basicTests);
+			__callQunit(testsToRun.userTests, userTests);
 
 
 			console.log("tests ended");
@@ -235,6 +242,7 @@ var FAT = (function(){
 
 		}
 
+
 		function __callQunit (testIds, tests) {
 			//		console.log(fitml);
 
@@ -245,7 +253,16 @@ var FAT = (function(){
 			, cb = {}
 			, testID = ""
 			, testResult = ""
+			, userTestResult = ""
 			;
+
+		function __testUserResult() {
+
+			test(test2run.message, function() {
+					ok( userTestResult === true, test2run.message);
+				});
+
+		}
 
 
 			for (y = testIds.length; y--;) {
@@ -253,22 +270,21 @@ var FAT = (function(){
 				test2run = tests[testID];
 				testResult = __runTest(test2run.testCode, test2run.type);
 
-				//			console.log(testResult);
-
-				console.log(test2run);
 				userTestResult = test2run.func(testResult);
-				}
+				__testUserResult();
 
-			test(test2run.message, function(userTestResult) {
-					ok( userTestResult === true, test2run.message);
-				//	ok(test2run.func() === true, test2run.message);
-			});
+			}
+
+			//test(test2run.message, function() {
+			//ok( userTestResult === true, test2run.message);
+			//});
+			//}
 
 		}
 
 		//TODO this api should be expanded to cover more test-types 
 		function __runTest (testCode, type) {
-	//		console.log(testCode);
+			//		console.log(testCode);
 			//	console.log(fitml);
 			var testResult = fitml.evaluate(testCode, fitml, null, XPathResult.ANY_YTPE, null);
 
@@ -284,6 +300,7 @@ var FAT = (function(){
 			var result = "";
 			var resultType = testResult.resultType;
 
+			//TODO use constants instead of constant-values
 			if(resultType === 1) {
 				//console.log("resultType is 1 / number");
 				result = testResult.numberValue;
@@ -293,7 +310,7 @@ var FAT = (function(){
 			}else if(resultType >= 4 && resultType <= 9){
 				//console.log("resultType is 4-9 / nodeSet");
 				result = testResult;
-	//			console.log(result);
+				//			console.log(result);
 			}
 
 			return result; 
@@ -311,6 +328,7 @@ var FAT = (function(){
 //console.log(FAT);
 //localStorage.clear();
 FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
+		return true;
 		if (data > 0) {
 			return false;
 		} else {
@@ -318,6 +336,7 @@ FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
 		}
 	}, "All images have an alt attribute" ,"xpath");
 FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
+		return true;
 		if (data > 0) {
 			return false;
 		} else {
