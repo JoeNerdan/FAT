@@ -26,8 +26,8 @@ var FAT = (function(){
             testCode: "//div[@class = 'meta']",
             message: "A meta section has to be defined!",
             func: function(data){
+                console.log("foo");
                 console.log(data);
-                console.log("in basic callback - will return true");
                 return true;
             },
             type: "xpath"
@@ -40,7 +40,6 @@ var FAT = (function(){
         , basicTestsCon = d.getElementById("basicTests")
         , userTestsCon = d.getElementById("userTests")
         , i = 0
-        //FIXME check if updated
         , basicTests = __readFromStorage("Fat_basicTests") || __saveToStorage("Fat_basicTests", predefinedbasicTests)
         , userTests =  __readFromStorage("Fat_userTests") || __saveToStorage("Fat_userTests", {})
         , fitml = {}
@@ -51,22 +50,7 @@ var FAT = (function(){
     function __saveToStorage(name, obj){
         //console.log("saveTo");
 
-        var old = __readFromStorage(name) || {};
-        var res = __mixObj(old, obj);
-        var dupsNames = "";
-
-        if (res.dups.length > 0) {
-            for (var i = res.dups.length; i--;) {
-                dupsNames += "\n * "+res.dups[i];
-            }
-
-            //console.log("The following test(s) already existed:"
-                    //+ dupsNames
-                    //+ "\n They were not overwritten."
-                    //);
-        }
-
-        var data2save = JSON.stringify(res.result, function (key, val) {
+        var data2save = JSON.stringify(obj, function (key, val) {
             if (typeof val === 'function') {
                 return val + ''; // implicitly `toString` it
             }
@@ -78,6 +62,7 @@ var FAT = (function(){
         var data = __readFromStorage(name) || {};
         return data;
     }
+
     /**
      * returns an object containing
      *  - the mixed object, b is mixed into a without the duplicates
@@ -128,7 +113,7 @@ var FAT = (function(){
 
 
     // read all rules and make a checkbox list out of them
-    function __makeList (tests) {
+    function __makeList (tests, withDeleteButton) {
         //console.log(tests);
 
         var container = d.createDocumentFragment();
@@ -151,6 +136,17 @@ var FAT = (function(){
                 label.appendChild(desc);
 
                 container.appendChild(label);
+                if (withDeleteButton) {
+                    var delButton = d.createElement("input");
+                    delButton.type = "button";
+                    delButton.value = "X";
+                    delButton.onclick = function (name) {
+                        return function(){
+                            FAT.removeTest(name);
+                        }
+                    }(test);
+                    container.appendChild(delButton);
+                }
                 container.appendChild(lineBreak);
 
             }
@@ -164,7 +160,7 @@ var FAT = (function(){
         basicTestsCon.innerHTML = "";
         userTestsCon.innerHTML = "";
         basicTestsCon.appendChild(__makeList(basicTests));
-        userTestsCon.appendChild(__makeList(userTests));
+        userTestsCon.appendChild(__makeList(userTests, true));
     }
     __redrawLists();
 
@@ -177,7 +173,14 @@ var FAT = (function(){
 
 
     function _addTest(name, testCode, func, message, type){
-        //FIXME check if we have this already, right now it is overwritten
+
+        if (userTests[name]) {
+            //user can override
+            if (!confirm("The test '"+name+"' exists.\n Do you want to override it?")) {
+                return false;
+            }
+        }
+
         //TODO better checks
         if (!name || !testCode || !func || !message || !type) {
             return "Check your arguments. Should be: (name, testCode, function, message, type)";
@@ -192,17 +195,24 @@ var FAT = (function(){
 
         var data = __saveToStorage("Fat_userTests", userTests);
         __redrawLists();
-        //	console.log(data);
 
         return this;
     }
 
-    function _removeTest(){
+    function _removeTest(name){
+        if (confirm("Test '"+ name + "' will be deleted. Are you sure?")) {
+        console.log(userTests);
+        delete userTests[name];
+        console.log(userTests);
+        }
 
+        __saveToStorage("Fat_userTests", userTests);
+        __redrawLists();
     }
 
     function _runTests(){
         console.log("tests running");
+
         basicTests = __readFromStorage("Fat_basicTests");
         userTests = __readFromStorage("Fat_userTests");
         fitml = __getFITML();
@@ -223,18 +233,19 @@ var FAT = (function(){
 
         var basicInputs = basicTestsCon.getElementsByTagName('input')
             , userInputs = userTestsCon.getElementsByTagName('input')
-            , tests2run = {}
-        , basicTests2Run = __filterCheckedBoxes(basicInputs)
+            , tests2run = null
+            , basicTests2Run = __filterCheckedBoxes(basicInputs)
             , userTests2Run = __filterCheckedBoxes(userInputs)
             ;
 
         basicTests2Run = __getIdListFromElements(basicTests2Run);
         userTests2Run = __getIdListFromElements(userTests2Run);
 
+        tests2run = {
+            "userTests" : userTests2Run,
+            "basicTests" : basicTests2Run
+        }
 
-        tests2run.userTests = userTests2Run;
-        tests2run.basicTests = basicTests2Run;
-        console.log(tests2run);
         return tests2run;
     }
 
@@ -292,17 +303,15 @@ var FAT = (function(){
 
         var i = 0
             , y = 0
-            , test2run = {}
-        , testCode = ""
-            , cb = {}
-        , testID = ""
+            , test2run = null
+            , cb = null
+            , testID = ""
             , testResult = ""
-            , userTestResult = ""
+            , cbTestResult = ""
             ;
-
-        function __testUserResult() {
-            test(testID, function() {
-                ok( userTestResult === true, test2run.message);
+        function __testCbResult(id, text) {
+            test(id, function() {
+                ok( cbTestResult === true, text);
             });
 
         }
@@ -314,13 +323,13 @@ var FAT = (function(){
             testResult = __runTest(test2run.testCode, test2run.type);
 
             if (typeof test2run.func === 'function') {
-                userTestResult = test2run.func(testResult) || false;
+                cbTestResult = test2run.func(testResult) || false;
             }else{
-                userTestResult = false;
+                cbTestResult = false;
                 console.dir(test2run);
                 console.log("There was a problem with the user callback for test: " + testID);
             }
-            __testUserResult();
+            __testCbResult(testID, test2run.message);
 
         }
 
@@ -329,7 +338,7 @@ var FAT = (function(){
 
     //TODO this api should be expanded to cover more test-types 
     function __runTest (testCode, type) {
-        //		console.log(testCode);
+            //console.log(testCode);
         //	console.log(fitml);
         var testResult = fitml.evaluate(testCode, fitml, null, XPathResult.ANY_YTPE, null);
 
@@ -375,24 +384,21 @@ var FAT = (function(){
 })();
 //console.log(FAT);
 //localStorage.clear();
-FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
-    console.log("dumm"+data);
-return true;
-if (data > 0) {
-return false;
-} else {
-return true;
-}
-}, "All images have an alt attribute" ,"xpath");
-FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
-    console.log("userTest will return true");
-    return true;
-    if (data > 0) {
-        return false;
-    } else {
-        return true;
-    }
-}, "All images have an src attribute" ,"xpath");
+//FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
+    //if (data > 0) {
+        //return false;
+    //} else {
+        //return true;
+    //}
+//}, "All images have an alt attribute" ,"xpath");
+
+//FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
+    //if (data > 0) {
+        //return false;
+    //} else {
+        //return true;
+    //}
+//}, "All images have an src attribute" ,"xpath");
 
 //FAT.addTest("fooboo", "count(//img[not(@alt)])", "0","All images have an alt attribute" ,"xpath");
 //console.log(localStorage.Fat_userTests);

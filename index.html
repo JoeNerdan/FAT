@@ -61,14 +61,12 @@
       <div id="fitmlContainer">
         <textarea id="fitmlInput" placeholder="FITML goes here" rows="8" cols="40">
           &lt;fitml&gt;
-            &lt;img/&gt;
-            &lt;img/&gt;
-            &lt;img/&gt;
+            &lt;img src alt/&gt;
+            &lt;img src alt/&gt;
+            &lt;img src alt/&gt;
+            &lt;img src alt/&gt;
           &lt;/fitml&gt;
         </textarea>
-      </div>
-      <div id="testResult">
-        here are the results
       </div>
 
     </div>
@@ -86,7 +84,8 @@
             </div>
         </div>
         <div id="addRules">
-            <textarea id="addRuleInput" placeholder="New tests go here" rows="8" cols="40"></textarea>
+            <textarea id="addRuleInput" placeholder="New tests go here" rows="8" cols="40">alert('You rock!');</textarea>
+            <input type="submit" name="addRuleSubmit" id="addRuleSubmit" value="Add Rule(s)" onclick="eval(document.getElementById('addRuleInput').value);"/>
         </div>
 
     </div>
