@@ -60,10 +60,10 @@ var FAT = (function(){
                 dupsNames += "\n * "+res.dups[i];
             }
 
-            console.log("The following test(s) already existed:"
-                    + dupsNames
-                    + "\n They were not overwritten."
-                    );
+            //console.log("The following test(s) already existed:"
+                    //+ dupsNames
+                    //+ "\n They were not overwritten."
+                    //);
         }
 
         var data2save = JSON.stringify(res.result, function (key, val) {
@@ -119,11 +119,9 @@ var FAT = (function(){
             if (data.hasOwnProperty(test)) {
                 returnObj[test] = data[test];
                 returnObj[test].func = eval('(function(){return '+data[test].func+'})()');
-                //		console.log(returnObj);
             }
         }
 
-        //console.trace(returnObj);
         return returnObj;
     }
 
@@ -291,7 +289,6 @@ var FAT = (function(){
 
     function __callQunit (testIds, tests) {
         //		console.log(fitml);
-        console.trace();
 
         var i = 0
             , y = 0
@@ -378,14 +375,15 @@ var FAT = (function(){
 })();
 //console.log(FAT);
 //localStorage.clear();
-//FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
-//return true;
-//if (data > 0) {
-//return false;
-//} else {
-//return true;
-//}
-//}, "All images have an alt attribute" ,"xpath");
+FAT.addTest("image have Alt", "count(//img[not(@alt)])", function(data){
+    console.log("dumm"+data);
+return true;
+if (data > 0) {
+return false;
+} else {
+return true;
+}
+}, "All images have an alt attribute" ,"xpath");
 FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
     console.log("userTest will return true");
     return true;
