@@ -15,19 +15,134 @@ var FAT = (function(){
      */
 
     var predefinedbasicTests = {
-        /*
-           moduleSliderID:	{
-           testCode: "someCode",
-           message: "Any moduleSlider has an ID",
-           type: "xpath"
+        
+           modleSliderID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
            },
-           */
+           moduleliderID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moduleSlierID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moduleSliID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moduleSliD:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moduleSli:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           modulliderID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           mouliderID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moueSiderID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           modulSierID:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           moduleSieI:	{
+            testCode: "count(//div[@class = 'moduleSlider'])",
+            message: "A moduleSlider needs a ID",
+            func: function(data){
+                if (data > 0) {
+                    return false;
+                };
+                return true;
+            },
+            type: "xpath"
+           },
+           
         metaSection:	{
             testCode: "//div[@class = 'meta']",
             message: "A meta section has to be defined!",
             func: function(data){
-                console.log("foo");
-                console.log(data);
+ //               console.log(data);
                 return true;
             },
             type: "xpath"
@@ -139,6 +254,7 @@ var FAT = (function(){
                 if (withDeleteButton) {
                     var delButton = d.createElement("input");
                     delButton.type = "button";
+                    delButton.setAttribute("class", "deleteButton");
                     delButton.value = "X";
                     delButton.onclick = function (name) {
                         return function(){
@@ -146,6 +262,8 @@ var FAT = (function(){
                         }
                     }(test);
                     container.appendChild(delButton);
+                }else{
+                    newCheckbox.checked = true;
                 }
                 container.appendChild(lineBreak);
 
@@ -201,9 +319,9 @@ var FAT = (function(){
 
     function _removeTest(name){
         if (confirm("Test '"+ name + "' will be deleted. Are you sure?")) {
-        console.log(userTests);
+ //       console.log(userTests);
         delete userTests[name];
-        console.log(userTests);
+   //     console.log(userTests);
         }
 
         __saveToStorage("Fat_userTests", userTests);
@@ -211,7 +329,7 @@ var FAT = (function(){
     }
 
     function _runTests(){
-        console.log("tests running");
+     //   console.log("tests running");
 
         basicTests = __readFromStorage("Fat_basicTests");
         userTests = __readFromStorage("Fat_userTests");
@@ -222,13 +340,13 @@ var FAT = (function(){
         __callQunit(testsToRun.userTests, userTests);
 
 
-        console.log("tests ended");
+ //       console.log("tests ended");
     }
 
     function __findTestsToRun(){
 
         // FIXME TODO HELPER REMOVE
-        H_checkAllBoxes();
+ //       H_checkAllBoxes();
         //HELPER REMOVE
 
         var basicInputs = basicTestsCon.getElementsByTagName('input')
@@ -326,7 +444,7 @@ var FAT = (function(){
                 cbTestResult = test2run.func(testResult) || false;
             }else{
                 cbTestResult = false;
-                console.dir(test2run);
+ //               console.dir(test2run);
                 console.log("There was a problem with the user callback for test: " + testID);
             }
             __testCbResult(testID, test2run.message);
@@ -402,5 +520,5 @@ var FAT = (function(){
 
 //FAT.addTest("fooboo", "count(//img[not(@alt)])", "0","All images have an alt attribute" ,"xpath");
 //console.log(localStorage.Fat_userTests);
-FAT.runTests();
+//FAT.runTests();
 
