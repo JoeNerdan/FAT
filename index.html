@@ -7,10 +7,10 @@
 
     <style type="text/css" media="screen">
       html{
-        width: 100%;
+        width: 95%;
         height: 100%;
         margin: 0;
-        padding: 0;
+        padding: 2%;
         font-family: sans-serif;
       }
       body{
@@ -30,7 +30,6 @@
         width: 49%; 
         float:left;
         border-right: 2px solid #bab8b8;
-        height: 100%;
       }
       #ruleContainer{
         width: 49%; 
@@ -57,6 +56,7 @@
         display: block;
         margin-top: 1em;
         margin-bottom: 1em;
+        margin-top: 2em;
         border-radius: 1em;
         background-color: white; 
         color: #373333;
@@ -69,8 +69,9 @@
           margin-left: 1em;
       color: red;
       background: transparent;
-      border: 1px solid white;
+      border: 2px solid white;
       font-weight: bold;
+      border-radius: 1em;
 
       }
       #fitmlInput{
@@ -78,6 +79,62 @@
       height: 90%;
       min-height: 300px;
       }
+      #helpButton{
+      width: 50px;
+      height: 50px;
+      position: fixed;
+      overflow: hidden;
+      right: 10px;
+      top: 10px;
+
+          }
+          #helpButton img{
+          width: 100%;
+          height: 100%;
+          }
+          #helpTextCon{
+              position: fixed;
+              width: 100%;
+              height: 100%;
+              background: rgba(0,0,0, 0.7);
+              top: 0;
+              left: 0;
+          }
+          #helpText{
+              border: 20px solid #373333;
+          margin: auto;
+          width: 70%;
+          height: 80%;
+          top: 10%;
+          position: relative;
+          background-color: white;
+          overflow: scroll;
+          color: black;
+          }
+          #helpText h1 {
+          color: #373333 ;
+          font-size: 1.5em;
+          }
+          #helpText h2 {
+          color: #373333 ;
+          font-size: 1.3em;
+          }
+          #helpText h3 {
+          color: #373333 ;
+          font-size: 1.2em;
+          font-weight: 2em;
+          }
+          #closeButton{
+          position: fixed;
+          top: 16%;
+          right: 18%;
+          z-index: 1;
+          color: red;
+          background: white;
+          border: 5px solid black;
+          border-radius: 2em;
+          font-weight: bold;
+          }
     </style>
 
     <link rel="stylesheet" href="qunit-1.11.0.css" type="text/css" media="screen" charset="utf-8"/>
@@ -86,8 +143,41 @@
   <body>
 
 
+<div id="helpButton">
+    <img src="help.svg" alt="helpButton"/>
+</div>
 
-    <input type="button" id="runTests" onclick="FAT.runTests();" value="Run Test"/>
+<div id="helpTextCon" style="display: ;">
+    <div id="closeButton">
+        <input type="BUTTON" name="closeButton" id="closeButton" value="X" />
+    </div>
+    <div id="helpText">
+        <h1>Intro</h1>
+        <p>T</p>
+
+        <h1>Usage</h1>
+            <h2>Basic Rules</h2>
+            <p>The tool offers basic rules. They are maintained by the FITML-Team, can not be deleted and mostly check your FITML for errors that will break the processing mechanism. </p>
+            <h2>User Rules</h2>
+            <p>
+            You are able to create your own rules. 
+            <h3>Add Rules</h3>
+            <p>A JS-Api is used to define new rules.
+            The syntax is:
+            FAT.addTest(Testname, xpathToBeExecuted, callbackFunction, message ,type);
+            </p>
+            <h3>Delete Rules</h3>
+            <p>To delete a rule, simply click the delete button next to it.</p>
+            </p>
+
+            <h2>Testrun</h2>
+
+            <p>The FITML code to be checked is pasted in the textarea.</p>
+
+        <h1>Further help</h1>
+        <p></p>
+    </div>
+</div>
 
 
     <div id="inputContainer">
@@ -132,6 +222,8 @@ FAT.addTest("image have src", "count(//img[not(@src)])", function(data){
         </div>
 
     </div>
+<br/>
+    <input type="button" id="runTests" onclick="FAT.runTests();" value="Run Test"/>
 
     <div id="qunit-fixture"></div>
     <div id="qunit"></div>

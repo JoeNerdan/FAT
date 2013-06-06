@@ -6,6 +6,15 @@ var FAT = (function(){
     }
 
 
+
+document.getElementById('helpButton').addEventListener("click", function() {
+    document.getElementById('helpTextCon').style.display = '';
+});
+document.getElementById('closeButton').addEventListener("click", function() {
+    document.getElementById('helpTextCon').style.display = 'none';
+});
+
+
     // TODO this is for the maintainer!!! make it more visible and understandable
     // FIXME if these change we have to compare with the saved stuff and adjust the localStorage
     /*
@@ -16,6 +25,7 @@ var FAT = (function(){
 
     var predefinedbasicTests = {
         
+        //FIXME this does not what it says it does
            moduleSliderID:	{
             testCode: "count(//div[@class = 'moduleSlider'])",
             message: "A moduleSlider needs a ID",
@@ -32,8 +42,12 @@ var FAT = (function(){
             testCode: "//div[@class = 'meta']",
             message: "A meta section has to be defined!",
             func: function(data){
- //               console.log(data);
-                return true;
+
+                if (data > 0) {
+                    return true;
+                } else {
+                    return false;   
+                };
             },
             type: "xpath"
         }
