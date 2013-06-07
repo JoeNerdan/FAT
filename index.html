@@ -246,12 +246,39 @@ Then select the tests you want to run with the checkboxes next to them and start
         <h1>Your FITML code</h1>
       <div id="fitmlContainer">
         <textarea id="fitmlInput" placeholder="FITML goes here" rows="8" cols="40">
-          &lt;fitml&gt;
-            &lt;img src alt/&gt;
-            &lt;img src alt/&gt;
-            &lt;img src alt/&gt;
-            &lt;img src alt/&gt;
-          &lt;/fitml&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;!--
+see: https://workspace.fitml.com/overview/doc/FITML_4_Reference/rootElements
+--&gt;  
+&lt;!-- meta contains options, styles, scripts and html-head content --&gt;
+&lt;div class="meta"&gt;
+&lt;!-- options may specify among other settings the page title --&gt;
+&lt;div class="options" title="FITML Basics - skeleton"/&gt;
+&lt;/div&gt;
+&lt;div class="header"&gt;
+&lt;h2&gt;FITML 4 skeleton&lt;/h2&gt;
+&lt;p&gt;The header always comes first&lt;/p&gt;
+&lt;hr/&gt;
+&lt;/div&gt;
+&lt;div class="content" sort="-10"&gt;
+&lt;p&gt;
+You can have multiple blocks of all kinds. The blocks are grouped 
+by type and printed in document order unless the &lt;code&gt;sort&lt;/code&gt; 
+attribute is given.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="content"&gt;
+&lt;p&gt;The header is followed by all content blocks.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;
+&lt;hr/&gt;
+&lt;p&gt;The footer blocks come last.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
         </textarea>
       </div>
 

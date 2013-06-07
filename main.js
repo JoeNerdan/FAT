@@ -39,15 +39,16 @@ document.getElementById('closeButton').addEventListener("click", function() {
            },
            
         metaSection:	{
-            testCode: "//div[@class = 'meta']",
+            testCode: "count(//div[@class = 'meta'])",
             message: "A meta section has to be defined!",
             func: function(data){
 
-                if (data > 0) {
+                if (data < 1) {
+                    return false;
+                }else{
                     return true;
-                } else {
-                    return false;   
-                };
+                }
+
             },
             type: "xpath"
         }
