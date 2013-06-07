@@ -25,6 +25,9 @@
         background-color: #555555; 
         color: white;
       }
+      .bold{
+      font-weight: bold;
+      }
 
       #inputContainer{
         width: 49%; 
@@ -54,7 +57,7 @@
         height: 50px;
         margin: auto;
         display: block;
-        margin-top: 1em;
+        margin-top: 2em;
         margin-bottom: 1em;
         margin-top: 2em;
         border-radius: 1em;
@@ -111,18 +114,29 @@
           overflow: scroll;
           color: black;
           }
+          #helpText p{
+          padding-left: 1em;
+          }
           #helpText h1 {
-          color: #373333 ;
-          font-size: 1.5em;
+              color: white;
+              font-size: 1.5em;
+              background: #2BB1af;
+              padding: 1em;
+              background-color: #0d3349;
           }
           #helpText h2 {
-          color: #373333 ;
-          font-size: 1.3em;
+              color: white;
+              font-size: 1.3em;
+              background: #2BB1af;
+              padding: 0.5em;
+              background-color: #0d3349;
           }
           #helpText h3 {
-          color: #373333 ;
-          font-size: 1.2em;
-          font-weight: 2em;
+              color: white;
+              font-size: 1.2em;
+              background: #2BB1af;
+              padding: 0.2em;
+              background-color: #0d3349;
           }
           #closeButton{
           position: fixed;
@@ -152,36 +166,84 @@
         <input type="BUTTON" name="closeButton" id="closeButton" value="X" />
     </div>
     <div id="helpText">
-        <h1>Intro</h1>
-        <p>T</p>
+        <h1>FAT - Intro</h1>
+        <p>
+        
+        FAT - FITML Analyzer Tool let's you run checks against your FITML document.
+        <br />
+        </p>
 
         <h1>Usage</h1>
             <h2>Basic Rules</h2>
             <p>The tool offers basic rules. They are maintained by the FITML-Team, can not be deleted and mostly check your FITML for errors that will break the processing mechanism. </p>
             <h2>User Rules</h2>
             <p>
-            You are able to create your own rules. 
+            You are able to create your own rules. This can be used for project specific testing.
             <h3>Add Rules</h3>
             <p>A JS-Api is used to define new rules.
             The syntax is:
-            FAT.addTest(Testname, xpathToBeExecuted, callbackFunction, message ,type);
+            <br />
+            <code>
+                FAT.addTest(testname, checkToBeExecuted, callbackFunction(resultData), message ,type);
+            </code>
+            <br />
+            where 
+            <ul>
+                <li>
+                <span class="bold">testname:</span>
+                is the name of the test. Can not be duplicate and should not be named like a basic test.
+                </li>
+                <li>
+                <span class="bold">checkToBeExecuted:</span>
+                is the check FAT will run against the markup. 
+                <br />
+                Keep the return value in mind since you will be using it in your callbackFunction.
+                </li>
+                <li>
+                <span class="bold">callbackFunction:</span>
+                This function will be called with the result of the check as argument 
+                <code>data</code>.
+                <br />
+                After checking  <code>data</code> your function should return 
+                <code>true</code> when the result is as expected or <code>false</code>
+                if not.
+                </li>
+                <li>
+                <span class="bold">message:</span>
+                This message is shown when the test fails.
+                </li>
+                <li>
+                <span class="bold">type:</span>
+                This defines the type of the check, in this version of FAT only 
+                <code>xpath</code> is a valid type.
+                </li>
+            </ul>
+
+
             </p>
             <h3>Delete Rules</h3>
             <p>To delete a rule, simply click the delete button next to it.</p>
+            <p>Basic rules can not be deleted.</p>
             </p>
 
             <h2>Testrun</h2>
 
-            <p>The FITML code to be checked is pasted in the textarea.</p>
+            <p>
+            To check a FITML document just paste the code in the window titled "Your FITML code".
+            <br />
+Then select the tests you want to run with the checkboxes next to them and start the test by pressing "Run Test".
+            </p>
 
-        <h1>Further help</h1>
-        <p></p>
+        <h1>Further help/infos</h1>
+        <p>
+        Contact jonathan@sevenval.com or fitmlteam@sevenval.com for support.
+        </p>
     </div>
 </div>
 
 
     <div id="inputContainer">
-        <h1>Your FITML Code</h1>
+        <h1>Your FITML code</h1>
       <div id="fitmlContainer">
         <textarea id="fitmlInput" placeholder="FITML goes here" rows="8" cols="40">
           &lt;fitml&gt;
